@@ -1,0 +1,87 @@
+@using InventoryStockControlSystem.ViewModels
+@model IEnumerable<WarehouseViewModel>
+
+@{
+    ViewData["Title"] = "Warehouses";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-building me-2"></i>Warehouses</h1>
+        <div class="breadcrumb">Inventory &rsaquo; Warehouses</div>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Add Warehouse
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible mx-3 mt-3" role="alert">
+                <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Contact</th>
+                            <th class="text-center">Status</th>
+                            <th>Created</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-600"><i class="bi bi-building me-1 text-muted"></i>@item.Name</td>
+                                <td class="text-secondary">@(item.Location ?? "-")</td>
+                                <td class="text-secondary">@(item.Contact ?? "-")</td>
+                                <td class="text-center">
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge badge-active">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-inactive">Inactive</span>
+                                    }
+                                </td>
+                                <td class="text-muted" style="font-size:12px;">@item.CreatedDate.ToString("dd MMM yyyy")</td>
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-warning btn-icon" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-danger btn-icon" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="bi bi-building d-block"></i>
+                <h5>No warehouses found</h5>
+                <p>Add your first warehouse to start tracking stock locations.</p>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i> Add Warehouse
+                </a>
+            </div>
+        }
+    </div>
+</div>

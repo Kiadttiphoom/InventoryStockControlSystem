@@ -1,0 +1,127 @@
+@using InventoryStockControlSystem.Models
+@{
+    ViewData["Title"] = "Record Stock Movement";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-plus-circle me-2"></i>Record Stock Movement</h1>
+        <div class="breadcrumb">Stock Movements &rsaquo; Record</div>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-arrow-left-right me-2 text-primary-custom"></i>Movement Details</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="All" class="alert alert-danger" style="display:none;"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Movement Type <span class="text-danger">*</span></label>
+                        <div class="d-flex gap-2">
+                            @foreach (var type in (string[])ViewBag.MovementTypes ?? Array.Empty<string>())
+                            {
+                                var colorMap = type == "In" ? "success" : type == "Out" ? "danger" : "warning";
+                                var iconMap  = type == "In" ? "arrow-down-circle" : type == "Out" ? "arrow-up-circle" : "arrows-angle-expand";
+                                <label class="movement-type-btn" style="flex:1;">
+                                    <input type="radio" name="movementType" value="@type" class="d-none movement-radio" required />
+                                    <div class="movement-type-card border rounded-2 p-3 text-center" style="cursor:pointer;transition:all .15s;">
+                                        <i class="bi bi-@iconMap" style="font-size:22px;color:var(--@colorMap);"></i>
+                                        <div style="font-size:13px;font-weight:600;margin-top:4px;">@type</div>
+                                    </div>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Product <span class="text-danger">*</span></label>
+                            <select name="productId" class="form-select" required>
+                                <option value="">-- Select Product --</option>
+                                @foreach (var p in (IEnumerable<Product>)ViewBag.Products ?? Enumerable.Empty<Product>())
+                                {
+                                    <option value="@p.Id">@p.Code - @p.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Warehouse <span class="text-danger">*</span></label>
+                            <select name="warehouseId" class="form-select" required>
+                                <option value="">-- Select Warehouse --</option>
+                                @foreach (var w in (IEnumerable<Warehouse>)ViewBag.Warehouses ?? Enumerable.Empty<Warehouse>())
+                                {
+                                    <option value="@w.Id">@w.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                            <input type="number" name="quantity" class="form-control" required min="1" placeholder="0" />
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Reference No.</label>
+                            <input type="text" name="reference" class="form-control" placeholder="e.g. PO-2026-001" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Notes</label>
+                            <textarea name="notes" class="form-control" rows="3" placeholder="Optional notes..."></textarea>
+                        </div>
+                    </div>
+
+                    <hr style="margin:1.25rem 0;border-color:#e2e8f0;" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Record Movement
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-info-circle me-2 text-info"></i>Movement Types</h5>
+            </div>
+            <div class="card-body" style="font-size:13px;line-height:1.9;">
+                <div class="d-flex align-items-start mb-2">
+                    <span class="badge badge-in me-2 mt-1">IN</span>
+                    <span class="text-secondary">Stock received into warehouse (purchase, return, etc.)</span>
+                </div>
+                <div class="d-flex align-items-start mb-2">
+                    <span class="badge badge-out me-2 mt-1">OUT</span>
+                    <span class="text-secondary">Stock dispatched from warehouse (sale, transfer, etc.)</span>
+                </div>
+                <div class="d-flex align-items-start">
+                    <span class="badge badge-adj me-2 mt-1">ADJ</span>
+                    <span class="text-secondary">Manual stock adjustment (count, damage, write-off, etc.)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.querySelectorAll('.movement-radio').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll('.movement-type-card').forEach(function(c) {
+                c.style.background = '';
+                c.style.borderColor = '';
+            });
+            if (this.checked) {
+                var card = this.parentElement.querySelector('.movement-type-card');
+                card.style.background = '#f0fdf4';
+                card.style.borderColor = '#6366f1';
+            }
+        });
+    });
+</script>
+}

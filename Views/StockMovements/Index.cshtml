@@ -1,0 +1,98 @@
+@using InventoryStockControlSystem.ViewModels
+@model IEnumerable<StockMovementViewModel>
+
+@{
+    ViewData["Title"] = "Stock Movements";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-arrow-left-right me-2"></i>Stock Movements
+            @if (!string.IsNullOrEmpty(ViewBag.ProductName as string))
+            {
+                <span style="background:#ede9fe;color:#6d28d9;padding:3px 10px;border-radius:20px;font-size:13px;font-weight:600;margin-left:8px;">@ViewBag.ProductName</span>
+            }
+        </h1>
+        <div class="breadcrumb">Inventory &rsaquo; Stock Movements</div>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Record Movement
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible mx-3 mt-3" role="alert">
+                <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible mx-3 mt-3" role="alert">
+                <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Product</th>
+                            <th>Warehouse</th>
+                            <th class="text-center">Type</th>
+                            <th class="text-end">Quantity</th>
+                            <th>Reference</th>
+                            <th>Notes</th>
+                            <th>Recorded By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-muted" style="font-size:12px;white-space:nowrap;">@item.CreatedDate.ToString("dd MMM yyyy HH:mm")</td>
+                                <td class="fw-600">@item.ProductName</td>
+                                <td class="text-secondary">@item.WarehouseName</td>
+                                <td class="text-center">
+                                    @if (item.MovementType == "In")
+                                    {
+                                        <span class="badge badge-in"><i class="bi bi-arrow-down me-1"></i>IN</span>
+                                    }
+                                    else if (item.MovementType == "Out")
+                                    {
+                                        <span class="badge badge-out"><i class="bi bi-arrow-up me-1"></i>OUT</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-adj"><i class="bi bi-arrows-angle-expand me-1"></i>ADJ</span>
+                                    }
+                                </td>
+                                <td class="text-end fw-600">@item.Quantity.ToString("N0")</td>
+                                <td><span style="font-size:12px;color:#6366f1;">@(item.Reference ?? "-")</span></td>
+                                <td class="text-secondary" style="font-size:12px;">@(item.Notes ?? "-")</td>
+                                <td class="text-muted" style="font-size:12px;">@(item.CreatedBy ?? "-")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="bi bi-arrow-left-right d-block"></i>
+                <h5>No stock movements yet</h5>
+                <p>Record your first stock movement to start tracking inventory changes.</p>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i> Record Movement
+                </a>
+            </div>
+        }
+    </div>
+</div>

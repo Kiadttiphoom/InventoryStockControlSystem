@@ -1,0 +1,155 @@
+@using InventoryStockControlSystem.ViewModels
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- KPI Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card kpi-primary">
+            <div class="kpi-icon"><i class="bi bi-archive-fill"></i></div>
+            <div class="kpi-value">@Model.TotalProducts</div>
+            <div class="kpi-label">Total Products</div>
+            <div class="kpi-change"><i class="bi bi-box-seam"></i> Active inventory items</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card kpi-success">
+            <div class="kpi-icon"><i class="bi bi-tags-fill"></i></div>
+            <div class="kpi-value">@Model.TotalCategories</div>
+            <div class="kpi-label">Categories</div>
+            <div class="kpi-change"><i class="bi bi-check-circle"></i> Product groups</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card kpi-info">
+            <div class="kpi-icon"><i class="bi bi-building-fill"></i></div>
+            <div class="kpi-value">@Model.TotalWarehouses</div>
+            <div class="kpi-label">Warehouses</div>
+            <div class="kpi-change"><i class="bi bi-geo-alt"></i> Storage locations</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="kpi-card kpi-danger">
+            <div class="kpi-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <div class="kpi-value">@Model.LowStockProducts</div>
+            <div class="kpi-label">Low Stock Alerts</div>
+            <div class="kpi-change"><i class="bi bi-arrow-down"></i> Below reorder level</div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart + Recent Movements -->
+<div class="row g-3">
+    <div class="col-lg-5">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5><i class="bi bi-pie-chart-fill me-2 text-primary-custom"></i>Stock Movement Summary</h5>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <canvas id="movementChart" style="max-height:260px;"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5><i class="bi bi-clock-history me-2 text-primary-custom"></i>Recent Stock Movements</h5>
+                <a asp-controller="StockMovements" asp-action="Index" class="btn btn-sm btn-primary">
+                    View All <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.RecentMovements != null && Model.RecentMovements.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Warehouse</th>
+                                    <th>Type</th>
+                                    <th class="text-end">Qty</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var m in Model.RecentMovements)
+                                {
+                                    <tr>
+                                        <td class="fw-600">@m.ProductName</td>
+                                        <td class="text-secondary">@m.WarehouseName</td>
+                                        <td>
+                                            @if (m.MovementType == "In")
+                                            {
+                                                <span class="badge badge-in">IN</span>
+                                            }
+                                            else if (m.MovementType == "Out")
+                                            {
+                                                <span class="badge badge-out">OUT</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-adj">ADJ</span>
+                                            }
+                                        </td>
+                                        <td class="text-end fw-600">@m.Quantity</td>
+                                        <td class="text-muted" style="font-size:12px;">@m.CreatedDate.ToString("dd MMM HH:mm")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-inbox d-block"></i>
+                        <h5>No movements yet</h5>
+                        <p>Record your first stock movement to see data here.</p>
+                        <a asp-controller="StockMovements" asp-action="Create" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-lg"></i> Add Movement
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+(function() {
+    var inCount  = @(Model.RecentMovements?.Count(m => m.MovementType == "In") ?? 0);
+    var outCount = @(Model.RecentMovements?.Count(m => m.MovementType == "Out") ?? 0);
+    var adjCount = @(Model.RecentMovements?.Count(m => m.MovementType == "Adjustment") ?? 0);
+
+    var ctx = document.getElementById('movementChart');
+    if (!ctx) return;
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Stock In', 'Stock Out', 'Adjustment'],
+            datasets: [{
+                data: [inCount, outCount, adjCount],
+                backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                borderWidth: 0,
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { font: { size: 12 }, padding: 16 }
+                }
+            }
+        }
+    });
+})();
+</script>
+}

@@ -1,0 +1,45 @@
+@using InventoryStockControlSystem.ViewModels
+@model WarehouseViewModel
+
+@{
+    ViewData["Title"] = "Delete Warehouse";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-trash me-2 text-danger"></i>Delete Warehouse</h1>
+        <div class="breadcrumb">Warehouses &rsaquo; Delete</div>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-5">
+        <div class="card" style="border-color:#fca5a5;">
+            <div class="card-header" style="background:#fff1f2;border-color:#fca5a5;">
+                <h5 class="text-danger mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Deletion</h5>
+            </div>
+            <div class="card-body">
+                <p style="color:#64748b;font-size:13.5px;">
+                    Are you sure you want to delete warehouse <strong>"@Model.Name"</strong>?
+                    All stock movements linked to this warehouse will be affected.
+                </p>
+                <div style="background:#f8fafc;border-radius:8px;padding:1rem;margin-bottom:1.25rem;border:1px solid #e2e8f0;">
+                    <div class="row g-2" style="font-size:13.5px;">
+                        <div class="col-4 text-muted">Name</div>
+                        <div class="col-8 fw-600">@Model.Name</div>
+                        <div class="col-4 text-muted">Location</div>
+                        <div class="col-8">@(Model.Location ?? "-")</div>
+                        <div class="col-4 text-muted">Contact</div>
+                        <div class="col-8">@(Model.Contact ?? "-")</div>
+                    </div>
+                </div>
+                <form asp-action="Delete" method="post" class="d-flex gap-2">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Yes, Delete</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

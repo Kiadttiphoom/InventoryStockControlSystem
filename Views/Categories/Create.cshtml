@@ -1,0 +1,55 @@
+@using InventoryStockControlSystem.ViewModels
+@model CategoryViewModel
+
+@{
+    ViewData["Title"] = "Create Category";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-plus-circle me-2"></i>Create Category</h1>
+        <div class="breadcrumb">Categories &rsaquo; Create</div>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-tags me-2 text-primary-custom"></i>Category Details</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" style="display:none;"></div>
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control" placeholder="e.g. Electronics" />
+                        <span asp-validation-for="Name" class="text-danger" style="font-size:12px;"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Optional..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" asp-for="IsActive" class="form-check-input" id="isActive" checked />
+                            <label class="form-check-label" for="isActive">Active</label>
+                        </div>
+                    </div>
+                    <hr style="border-color:#e2e8f0;" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Create
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,86 @@
+<nav class="navbar-dark">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")" 
+                   asp-controller="Dashboard" asp-action="Index">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Products" ? "active" : "")" 
+                   asp-controller="Products" asp-action="Index">
+                    <i class="bi bi-box-seam"></i> Products
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Categories" ? "active" : "")" 
+                   asp-controller="Categories" asp-action="Index">
+                    <i class="bi bi-tags"></i> Categories
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Warehouses" ? "active" : "")" 
+                   asp-controller="Warehouses" asp-action="Index">
+                    <i class="bi bi-building"></i> Warehouses
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "StockMovements" ? "active" : "")" 
+                   asp-controller="StockMovements" asp-action="Index">
+                    <i class="bi bi-arrow-repeat"></i> Stock Movements
+                </a>
+            </li>
+            <hr />
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">
+                    <i class="bi bi-person-circle"></i> My Account
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Logout" onclick="document.getElementById('logoutForm').submit();return false;">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </li>
+        </ul>
+        <form id="logoutForm" method="post" style="display:none;"></form>
+    </div>
+</nav>
+
+<style>
+    .navbar-dark .nav-link {
+        color: #333 !important;
+        padding: 0.75rem 1rem;
+        border-radius: 4px;
+        margin-bottom: 0.25rem;
+    }
+
+    .navbar-dark .nav-link:hover {
+        background-color: #e9ecef;
+    }
+
+    .navbar-dark .nav-link.active {
+        background-color: #007bff;
+        color: white !important;
+    }
+
+    .navbar-dark .nav-link i {
+        margin-right: 0.5rem;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 56px;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 0;
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    }
+
+    @@media (max-width: 768px) {
+        .sidebar {
+            top: 56px;
+        }
+    }
+</style>
